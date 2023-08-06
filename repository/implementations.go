@@ -31,6 +31,18 @@ func (r *Repository) GetUserByPhoneNumber(ctx context.Context, input GetUserByPh
 	return &user, nil
 }
 
+func (r *Repository) GetUserById(ctx context.Context, input GetUserByIdInput) (*Users, *errorlib.Error) {
+	var user Users
+	err := r.Db.QueryRowContext(ctx, "SELECT id, phone_number, full_name, passwords FROM users WHERE id = $1", input.Id).Scan(&user.Id, &user.PhoneNumber, &user.FullName, &user.Password)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, errorlib.InternalServerError("Error when getting user by id : " + err.Error())
+	}
+	return &user, nil
+}
+
 func (r *Repository) UpdateSuccessfulLoginCount(ctx context.Context, input UpdateSuccessfulLoginCountInput) *errorlib.Error {
 	_, err := r.Db.ExecContext(ctx, "UPDATE users set successful_login_count = successful_login_count + 1 WHERE id = $1", input.Id)
 	if err != nil {

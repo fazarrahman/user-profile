@@ -44,6 +44,22 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+    get:
+      summary: This is endpoint to get user profile
+      operationId: getUser
+      responses:
+        '200':
+          description: return user object
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /login:
     post:
       summary: Endpoint to login
@@ -135,6 +151,16 @@ components:
           type: integer
           format: int64
         accessToken:
+          type: string
+    UserResponse:
+      type: object
+      required:
+        - fullName
+        - phoneNumber
+      properties:
+        fullName:
+          type: string
+        phoneNumber:
           type: string
     Response:
       type: object

@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/fazarrahman/user-profile/generated"
 	"github.com/labstack/echo/v4"
@@ -43,4 +44,24 @@ func (s *Server) Login(ctx echo.Context) error {
 		return ctx.JSON(err.StatusCode, echo.Map{"error": err.Message})
 	}
 	return ctx.JSON(http.StatusOK, loginResp)
+}
+
+func (s *Server) GetUser(ctx echo.Context) error {
+	accessToken := extractToken(ctx)
+	userResp, err := s.Svc.GetUserByAccessToken(ctx.Request().Context(), accessToken)
+	if err != nil {
+		return ctx.JSON(err.StatusCode, echo.Map{"error": err.Message})
+	}
+	return ctx.JSON(http.StatusOK, generated.UserResponse{
+		FullName:    userResp.FullName,
+		PhoneNumber: userResp.PhoneNumber,
+	})
+}
+
+func extractToken(c echo.Context) string {
+	bearerToken := c.Request().Header.Get("Authorization")
+	if len(strings.Split(bearerToken, " ")) == 2 {
+		return strings.Split(bearerToken, " ")[1]
+	}
+	return ""
 }

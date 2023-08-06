@@ -15,6 +15,7 @@ const (
 	BadRequestCode            string = "BAD_REQUEST"
 	ResourceAlreadyExistsCode string = "RESOURCE_ALREADY_EXISTS"
 	UnauthorizedCode          string = "UNAUTHORIZED"
+	ForbiddenCode             string = "FORBIDDEN_CODE"
 )
 
 func NotFound(message string) *Error {
@@ -23,6 +24,10 @@ func NotFound(message string) *Error {
 
 func InternalServerError(message string) *Error {
 	return &Error{StatusCode: http.StatusInternalServerError, Code: InternalServerErrorCode, Message: message}
+}
+
+func Forbidden(message string) *Error {
+	return &Error{StatusCode: http.StatusForbidden, Code: ForbiddenCode, Message: message}
 }
 
 func BadRequest(message string) *Error {

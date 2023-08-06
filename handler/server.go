@@ -5,9 +5,9 @@ import (
 )
 
 type Server struct {
-	Svc *service.Service
+	Svc service.ServiceInterface
 }
 
-func NewServer(svc *service.Service) *Server {
+func NewServer(svc service.ServiceInterface) *Server {
 	return &Server{Svc: svc}
 }

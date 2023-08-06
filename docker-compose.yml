@@ -4,8 +4,9 @@ services:
     ports:
       - "8080:1323"
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@db:5432/database?sslmode=disable
-      - TOKEN_HOUR_LIFESPAN=1
+      DATABASE_URL: postgres://postgres:postgres@db:5432/database?sslmode=disable
+      TOKEN_HOUR_LIFESPAN: 1
+      API_SECRET: 999999
     depends_on:
       db:
         condition: service_healthy

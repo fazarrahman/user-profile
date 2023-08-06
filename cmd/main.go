@@ -25,6 +25,6 @@ func newServer() *handler.Server {
 	var repo repository.RepositoryInterface = repository.NewRepository(repository.NewRepositoryOptions{
 		Dsn: dbDsn,
 	})
-	service := service.NewService(service.NewServiceOptions{Repository: repo})
-	return handler.NewServer(service)
+	var svc service.ServiceInterface = service.NewService(service.NewServiceOptions{Repository: repo})
+	return handler.NewServer(svc)
 }

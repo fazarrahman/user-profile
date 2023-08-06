@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -100,6 +101,24 @@ func (s *Service) CheckPhoneNbrAndPassword(ctx context.Context, r *generated.Log
 	return userEntity, nil
 }
 
+func (s *Service) GetUserByAccessToken(ctx context.Context, accessToken string) (*repository.Users, *errorlib.Error) {
+	if accessToken == "" {
+		return nil, errorlib.Unauthorized("Access token is required")
+	}
+	claimMap, err := ExtractTokenID(ctx, accessToken)
+	if err != nil {
+		return nil, errorlib.Forbidden("Invalid access token : " + err.Error())
+	}
+	phoneNbr := fmt.Sprintf("%s", claimMap["PhoneNumber"])
+	user, errl := s.Repository.GetUserByPhoneNumber(ctx, repository.GetUserByPhoneNumberInput{
+		PhoneNumber: phoneNbr,
+	})
+	if errl != nil {
+		return nil, errl
+	}
+	return user, nil
+}
+
 func GenerateToken(user *repository.Users) (string, error) {
 
 	token_lifespan, err := strconv.Atoi(os.Getenv("TOKEN_HOUR_LIFESPAN"))
@@ -111,11 +130,31 @@ func GenerateToken(user *repository.Users) (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["Id"] = user.Id
-	claims["FullName"] = user.FullName
 	claims["PhoneNumber"] = user.PhoneNumber
 	claims["exp"] = time.Now().Add(time.Hour * time.Duration(token_lifespan)).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	return token.SignedString([]byte(os.Getenv("API_SECRET")))
 
+}
+
+func ExtractTokenID(c context.Context, tokenString string) (map[string]interface{}, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(os.Getenv("API_SECRET")), nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if ok && token.Valid {
+		var cMap = make(map[string]interface{})
+		cMap["Id"] = fmt.Sprintf("%s", claims["Id"])
+		cMap["PhoneNumber"] = fmt.Sprintf("%s", claims["PhoneNumber"])
+		cMap["exp"] = fmt.Sprintf("%0.f", claims["exp"])
+		return cMap, nil
+	}
+	return nil, nil
 }
