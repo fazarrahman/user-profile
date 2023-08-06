@@ -52,3 +52,39 @@ To run test, run the following command:
 ```
 make test
 ```
+
+## Endpoints' CURLs 
+1. Register User
+curl --location 'http://localhost:8080/user' \
+--header 'Content-Type: application/json' \
+--data '{
+    "phoneNumber": "+62821389455",
+    "fullName": "Fazar Rahman 2",
+    "passwords": "Passwords"
+}'
+
+2. Login
+curl --location 'http://localhost:8080/login' \
+--header 'Content-Type: application/json' \
+--data '{
+    "phoneNumber": "+62821389455",
+    "passwords": "Passwords"
+}'
+
+3. Get Profile
+curl --location 'http://localhost:8080/user' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6NSwiYXV0aG9yaXplZCI6dHJ1ZSwiZXhwIjoxNjkxMzQ5OTc5fQ.3HQU-huiH29Hn1T-TZE2C-05xXw7qEMjPfVP4B7v4Sg'
+
+4. Update Profile
+curl --location --request PUT 'http://localhost:8080/user' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6NSwiYXV0aG9yaXplZCI6dHJ1ZSwiZXhwIjoxNjkxMzQ5OTc5fQ.3HQU-huiH29Hn1T-TZE2C-05xXw7qEMjPfVP4B7v4Sg' \
+--data '{
+    "phoneNumber": "+62821389457",
+    "fullName": "Fazar 9"
+}'
+
+
+## Postman Collection
+import to postman using this :
+https://api.postman.com/collections/983783-2e487ecd-9e19-4fe3-a1e1-60f47213f9c9?access_key=PMAT-01H761XF066GAFMRP0E6T3ADHG
