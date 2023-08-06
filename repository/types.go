@@ -31,6 +31,12 @@ type GetUserByIdInput struct {
 	Id int64 `db:"id"`
 }
 
+type UpdateUserInput struct {
+	Id          int64  `db:"id"`
+	PhoneNumber string `db:"phone_number"`
+	FullName    string `pq:"full_name"`
+}
+
 type Users struct {
 	Id          int64  `pq:"id"`
 	PhoneNumber string `pq:"phone_number"`

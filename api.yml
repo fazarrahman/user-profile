@@ -60,6 +60,32 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+    put:
+      summary: Endpoint to update user
+      operationId: userUpdate
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: "#/components/schemas/UpdateUsers"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /login:
     post:
       summary: Endpoint to login
@@ -87,29 +113,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /hello:
-    get:
-      summary: This is just a test endpoint to get you started. Please delete this endpoint.
-      operationId: hello
-      parameters:
-        - name: id
-          in: query
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Test return
-          content:
-            application/json:    
-              schema:
-                $ref: "#/components/schemas/Response"
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     Users:
@@ -133,6 +136,15 @@ components:
         passwords:
           type: string
           example: password
+    UpdateUsers:
+      type: object
+      properties:
+        phoneNumber:
+          type: string
+          example: 08123342446
+        fullName:
+          type: string
+          example: Fazar
     CreateResponse:
       type: object
       required:

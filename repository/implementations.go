@@ -50,3 +50,11 @@ func (r *Repository) UpdateSuccessfulLoginCount(ctx context.Context, input Updat
 	}
 	return nil
 }
+
+func (r *Repository) UpdateUser(ctx context.Context, input UpdateUserInput) *errorlib.Error {
+	_, err := r.Db.ExecContext(ctx, "UPDATE users set phone_number = $1, full_name = $2 WHERE id = $3", input.PhoneNumber, input.FullName, input.Id)
+	if err != nil {
+		return errorlib.InternalServerError("Error when updating user data" + err.Error())
+	}
+	return nil
+}
