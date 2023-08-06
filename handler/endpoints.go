@@ -32,3 +32,15 @@ func (s *Server) UserRegister(ctx echo.Context) error {
 	resp.Id = createdUser.Id
 	return ctx.JSON(http.StatusOK, resp)
 }
+
+func (s *Server) Login(ctx echo.Context) error {
+	var req generated.LoginInput
+	if err := ctx.Bind(&req); err != nil {
+		return ctx.JSON(http.StatusBadRequest, echo.Map{"error": err})
+	}
+	loginResp, err := s.Svc.Login(ctx.Request().Context(), &req)
+	if err != nil {
+		return ctx.JSON(err.StatusCode, echo.Map{"error": err.Message})
+	}
+	return ctx.JSON(http.StatusOK, loginResp)
+}

@@ -12,5 +12,6 @@ CREATE TABLE users (
 	id serial PRIMARY KEY,
   phone_number VARCHAR ( 255 ) UNIQUE NOT NULL,
 	full_name VARCHAR ( 255 ) NOT NULL,
-  passwords VARCHAR ( 255 ) NOT NULL
+  passwords VARCHAR ( 255 ) NOT NULL,
+  successful_login_count bigint DEFAULT 0 NOT NULL
 );

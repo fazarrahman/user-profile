@@ -12,5 +12,6 @@ import (
 
 type RepositoryInterface interface {
 	CreateUser(ctx context.Context, input CreateUserInput) (output *CreateUserOutput, err *errorlib.Error)
-	GetUserByPhoneNumber(ctx context.Context, input GetUserByPhoneNumberInput) (*GetUserByPhoneNumberOutput, *errorlib.Error)
+	GetUserByPhoneNumber(ctx context.Context, input GetUserByPhoneNumberInput) (*Users, *errorlib.Error)
+	UpdateSuccessfulLoginCount(ctx context.Context, input UpdateSuccessfulLoginCountInput) *errorlib.Error
 }

@@ -22,4 +22,5 @@ func NewService(opts NewServiceOptions) *Service {
 
 type ServiceInterface interface {
 	CreateUser(ctx context.Context, input generated.Users) (output *repository.CreateUserOutput, errl *errorlib.Error)
+	Login(ctx context.Context, loginInput *generated.LoginInput) (*generated.LoginResponse, *errorlib.Error)
 }
