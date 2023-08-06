@@ -8,3 +8,23 @@ type GetTestByIdInput struct {
 type GetTestByIdOutput struct {
 	Name string
 }
+
+type CreateUserInput struct {
+	PhoneNumber string `db:"phone_number"`
+	FullName    string `db:"full_name"`
+	Password    []byte `db:"password"`
+}
+
+type CreateUserOutput struct {
+	Id int64 `db:"id"`
+}
+
+type GetUserByPhoneNumberInput struct {
+	PhoneNumber string `db:"phone_number"`
+}
+
+type GetUserByPhoneNumberOutput struct {
+	Id          int64  `pq:"id"`
+	PhoneNumber string `pq:"phone_number"`
+	FullName    string `pq:"full_name"`
+}

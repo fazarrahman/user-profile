@@ -6,6 +6,7 @@ import (
 	"github.com/fazarrahman/user-profile/generated"
 	"github.com/fazarrahman/user-profile/handler"
 	"github.com/fazarrahman/user-profile/repository"
+	"github.com/fazarrahman/user-profile/service"
 
 	"github.com/labstack/echo/v4"
 )
@@ -24,8 +25,6 @@ func newServer() *handler.Server {
 	var repo repository.RepositoryInterface = repository.NewRepository(repository.NewRepositoryOptions{
 		Dsn: dbDsn,
 	})
-	opts := handler.NewServerOptions{
-		Repository: repo,
-	}
-	return handler.NewServer(opts)
+	service := service.NewService(service.NewServiceOptions{Repository: repo})
+	return handler.NewServer(service)
 }

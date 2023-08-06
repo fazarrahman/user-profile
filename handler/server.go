@@ -1,15 +1,13 @@
 package handler
 
-import "github.com/fazarrahman/user-profile/repository"
+import (
+	"github.com/fazarrahman/user-profile/service"
+)
 
 type Server struct {
-	Repository repository.RepositoryInterface
+	Svc *service.Service
 }
 
-type NewServerOptions struct {
-	Repository repository.RepositoryInterface
-}
-
-func NewServer(opts NewServerOptions) *Server {
-	return &Server{}
+func NewServer(svc *service.Service) *Server {
+	return &Server{Svc: svc}
 }

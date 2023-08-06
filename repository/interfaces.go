@@ -4,8 +4,13 @@
 // interfaces using mockgen. See the Makefile for more information.
 package repository
 
-import "context"
+import (
+	"context"
+
+	errorlib "github.com/fazarrahman/user-profile/errorLib"
+)
 
 type RepositoryInterface interface {
-	GetTestById(ctx context.Context, input GetTestByIdInput) (output GetTestByIdOutput, err error)
+	CreateUser(ctx context.Context, input CreateUserInput) (output *CreateUserOutput, err *errorlib.Error)
+	GetUserByPhoneNumber(ctx context.Context, input GetUserByPhoneNumberInput) (*GetUserByPhoneNumberOutput, *errorlib.Error)
 }
