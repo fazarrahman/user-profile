@@ -83,8 +83,3 @@ curl --location --request PUT 'http://localhost:8080/user' \
     "phoneNumber": "+62821389457",
     "fullName": "Fazar 9"
 }'
-
-
-## Postman Collection
-import to postman using this :
-https://api.postman.com/collections/983783-2e487ecd-9e19-4fe3-a1e1-60f47213f9c9?access_key=PMAT-01H761XF066GAFMRP0E6T3ADHG
