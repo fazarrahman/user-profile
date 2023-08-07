@@ -28,11 +28,12 @@ func (s *Service) CreateUser(ctx context.Context, req generated.Users) (output *
 	}
 	userByPhone, errl := s.Repository.GetUserByPhoneNumber(ctx,
 		repository.GetUserByPhoneNumberInput{PhoneNumber: *req.PhoneNumber})
+
 	if errl != nil {
 		return nil, errl
 	}
 	if userByPhone != nil {
-		return nil, errorlib.ResourceAlreadyExist("Phone number is already exists")
+		return nil, errorlib.ResourceAlreadyExist("Phone number is already used")
 	}
 	if req.FullName == nil {
 		return nil, errorlib.BadRequest("Full name is required")
