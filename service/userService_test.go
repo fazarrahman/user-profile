@@ -372,3 +372,102 @@ func TestGetUserByAccessToken_InvalidAccessToken_ReturnForbidden(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestUpdateUser_PhoneNbrNotProvided_ReturnBadRequest(t *testing.T) {
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	c := context.Background()
+
+	repoMock := repository.NewMockRepositoryInterface(mockCtrl)
+
+	svc := NewService(NewServiceOptions{
+		Repository: repoMock,
+	})
+
+	err := svc.UpdateUser(c, generated.UpdateUsers{}, "aaa")
+	if err.StatusCode != http.StatusBadRequest || err.Message != "Phone numbers is required" {
+		t.Fail()
+	}
+}
+
+func TestUpdateUser_PhoneNbrIncorrectLength_ReturnBadRequest(t *testing.T) {
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	c := context.Background()
+
+	repoMock := repository.NewMockRepositoryInterface(mockCtrl)
+
+	svc := NewService(NewServiceOptions{
+		Repository: repoMock,
+	})
+
+	var phoneNbr string = "+62812"
+	err := svc.UpdateUser(c, generated.UpdateUsers{PhoneNumber: &phoneNbr}, "aaa")
+	if err.StatusCode != http.StatusBadRequest ||
+		err.Message != "Phone numbers must be at minimum 10 characters and maximum 13 characters" {
+		t.Fail()
+	}
+}
+
+func TestUpdateUser_PhoneNbrDoesntStartWithIndonesiaCountryCode_ReturnBadRequest(t *testing.T) {
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	c := context.Background()
+
+	repoMock := repository.NewMockRepositoryInterface(mockCtrl)
+
+	svc := NewService(NewServiceOptions{
+		Repository: repoMock,
+	})
+
+	var phoneNbr string = "081232449324"
+	err := svc.UpdateUser(c, generated.UpdateUsers{PhoneNumber: &phoneNbr}, "aaa")
+	if err.StatusCode != http.StatusBadRequest ||
+		err.Message != "Phone numbers must start with the Indonesia country code +62" {
+		t.Fail()
+	}
+}
+
+func TestUpdateUser_FullNameNotProvided_ReturnBadRequest(t *testing.T) {
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	c := context.Background()
+
+	repoMock := repository.NewMockRepositoryInterface(mockCtrl)
+
+	svc := NewService(NewServiceOptions{
+		Repository: repoMock,
+	})
+
+	var phoneNbr string = "+6281232449"
+	err := svc.UpdateUser(c, generated.UpdateUsers{PhoneNumber: &phoneNbr}, "aaa")
+	if err.StatusCode != http.StatusBadRequest ||
+		err.Message != "Full name is required" {
+		t.Fail()
+	}
+}
+
+func TestUpdateUser_FullNameIncorrectLength_ReturnBadRequest(t *testing.T) {
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	c := context.Background()
+
+	repoMock := repository.NewMockRepositoryInterface(mockCtrl)
+
+	svc := NewService(NewServiceOptions{
+		Repository: repoMock,
+	})
+
+	var phoneNbr string = "+6281232449"
+	var fullName string = "an"
+	err := svc.UpdateUser(c, generated.UpdateUsers{PhoneNumber: &phoneNbr, FullName: &fullName}, "aaa")
+	if err.StatusCode != http.StatusBadRequest ||
+		err.Message != "Full name must be at minimum 3 characters and maximum 60 characters" {
+		t.Fail()
+	}
+}

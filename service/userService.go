@@ -123,6 +123,22 @@ func (s *Service) GetUserByAccessToken(ctx context.Context, accessToken string) 
 }
 
 func (s *Service) UpdateUser(ctx context.Context, req generated.UpdateUsers, accessToken string) *errorlib.Error {
+	if req.PhoneNumber == nil {
+		return errorlib.BadRequest("Phone numbers is required")
+	}
+	if len(*req.PhoneNumber) < 10 || len(*req.PhoneNumber) > 13 {
+		return errorlib.BadRequest("Phone numbers must be at minimum 10 characters and maximum 13 characters")
+	}
+	pArr := strings.Split(*req.PhoneNumber, "")
+	if strings.Join(pArr[:3], "") != "+62" {
+		return errorlib.BadRequest("Phone numbers must start with the Indonesia country code +62")
+	}
+	if req.FullName == nil {
+		return errorlib.BadRequest("Full name is required")
+	}
+	if len(*req.FullName) < 3 || len(*req.FullName) > 60 {
+		return errorlib.BadRequest("Full name must be at minimum 3 characters and maximum 60 characters")
+	}
 	user, errl := s.GetUserByAccessToken(ctx, accessToken)
 	if errl != nil {
 		return errl
