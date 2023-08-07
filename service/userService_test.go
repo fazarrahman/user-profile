@@ -335,3 +335,40 @@ func TestLogin_InvalidPassword_ReturnBadRequest(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestGetUserByAccessToken_AccessTokenNotProvided_ReturnForbidden(t *testing.T) {
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	c := context.Background()
+
+	repoMock := repository.NewMockRepositoryInterface(mockCtrl)
+
+	svc := NewService(NewServiceOptions{
+		Repository: repoMock,
+	})
+
+	_, err := svc.GetUserByAccessToken(c, "")
+	if err.StatusCode != http.StatusForbidden ||
+		err.Message != "Access token is required" {
+		t.Fail()
+	}
+}
+
+func TestGetUserByAccessToken_InvalidAccessToken_ReturnForbidden(t *testing.T) {
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	c := context.Background()
+
+	repoMock := repository.NewMockRepositoryInterface(mockCtrl)
+
+	svc := NewService(NewServiceOptions{
+		Repository: repoMock,
+	})
+
+	_, err := svc.GetUserByAccessToken(c, "aaa")
+	if err.StatusCode != http.StatusForbidden {
+		t.Fail()
+	}
+}
